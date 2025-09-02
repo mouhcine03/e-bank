@@ -1,11 +1,12 @@
 package com.mouhcine.ebankbackend.web;
 
+import com.mouhcine.ebankbackend.Enums.AccType;
+import com.mouhcine.ebankbackend.Enums.operationType;
+import com.mouhcine.ebankbackend.Exceptions.BalanceInsufisentException;
+import com.mouhcine.ebankbackend.Exceptions.CustomorNotFoundException;
 import com.mouhcine.ebankbackend.Exceptions.bankAccountNotFoundException;
-import com.mouhcine.ebankbackend.dtos.AccountHistoryDto;
-import com.mouhcine.ebankbackend.dtos.AccountOperationDto;
-import com.mouhcine.ebankbackend.dtos.BankAccountDto;
-import com.mouhcine.ebankbackend.entities.BankAccount;
-import com.mouhcine.ebankbackend.entities.CurrentAccount;
+import com.mouhcine.ebankbackend.Exceptions.bankAccountSuspended;
+import com.mouhcine.ebankbackend.dtos.*;
 import com.mouhcine.ebankbackend.services.BankAccountService;
 import com.mouhcine.ebankbackend.services.CustomerService;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +38,7 @@ public class BankAccountRestController {
         return bankAccountService.getBankAccountList();
     }
 
-    public BankAccountDto createBankAccount(BankAccountDto bankAccountDto) throws bankAccountNotFoundException {
-        return null;
-    }
+
 
     @GetMapping("/history/{accountId}")
     public List<AccountOperationDto> getAccountHisrtory(@PathVariable String accountId) throws bankAccountNotFoundException {
@@ -52,6 +51,37 @@ public class BankAccountRestController {
             , @RequestParam(name = "size",defaultValue ="5") int size) throws bankAccountNotFoundException {
         return bankAccountService.getAccountHistory(accountId,page,size) ;
     }
+
+
+    @PostMapping("/createAccount/{customerId}")
+    public BankAccountDto createBankAccount(@PathVariable Long customerId,@RequestBody CreateAccountDto createAccountDto) throws CustomorNotFoundException, bankAccountNotFoundException {
+        if (createAccountDto.getAccountType()== AccType.CURRENT){
+            return bankAccountService.saveCurrentBankAccount(createAccountDto.getBalance(),customerId,createAccountDto.getOverdraft());
+        } else if (createAccountDto.getAccountType()==AccType.SAVING) {
+            return bankAccountService.saveSavingBankAccount(createAccountDto.getBalance(),customerId,createAccountDto.getInterestRate());
+
+        }else throw  new  IllegalArgumentException("Invalid account type: " + createAccountDto.getAccountType());
+    }
+
+
+
+
+    @PostMapping("/operation/{accountId}")
+    public void effectueroperation(@PathVariable String accountId,@RequestBody operationRequestDto operationRequestDto) throws bankAccountNotFoundException, bankAccountSuspended, BalanceInsufisentException {
+        if (operationRequestDto.getOperationType()== operationType.CREDIT){
+            bankAccountService.credit(accountId, operationRequestDto.getAmount(), operationRequestDto.getDescription());
+        } else if (operationRequestDto.getOperationType()==operationType.DEBIT) {
+            bankAccountService.debit(accountId, operationRequestDto.getAmount(), operationRequestDto.getDescription());
+
+        } else if (operationRequestDto.getOperationType()==operationType.VIREMENT) {
+            bankAccountService.virement(accountId,operationRequestDto.getIdDestinationVirement(),operationRequestDto.getAmount(),operationRequestDto.getDescription());
+
+        }else throw new  IllegalArgumentException("Operation Type undefined");
+    }
+
+
+
+
 
 
 

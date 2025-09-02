@@ -156,9 +156,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public void virement(String accountIdSource, String accountIdDestination, double montant) throws bankAccountNotFoundException, bankAccountSuspended, BalanceInsufisentException {
-        debit(accountIdSource,montant," transfer from"+accountIdDestination);
-        credit(accountIdDestination,montant,"transfer to"+accountIdSource);
+    public void virement(String accountIdSource, String accountIdDestination, double montant,String description) throws bankAccountNotFoundException, bankAccountSuspended, BalanceInsufisentException {
+        debit(accountIdSource,montant,description);
+        credit(accountIdDestination,montant,"transfer FROM "+accountIdSource);
 
 
     }

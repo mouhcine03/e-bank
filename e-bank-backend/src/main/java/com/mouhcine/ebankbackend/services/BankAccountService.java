@@ -23,7 +23,7 @@ public interface BankAccountService {
 
     void debit(String accountId, double amount ,String description) throws bankAccountNotFoundException, bankAccountSuspended, BalanceInsufisentException;
     void credit(String accountId, double amount, String description) throws bankAccountNotFoundException, bankAccountSuspended;
-    void virement(String accountIdSource , String accountIdDestination , double montant) throws bankAccountNotFoundException, bankAccountSuspended, BalanceInsufisentException;
+    void virement(String accountIdSource , String accountIdDestination , double montant,String description) throws bankAccountNotFoundException, bankAccountSuspended, BalanceInsufisentException;
     List<BankAccountDto> getBankAccountList();
 
 
