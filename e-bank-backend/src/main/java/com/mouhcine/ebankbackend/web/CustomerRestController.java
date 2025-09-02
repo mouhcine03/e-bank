@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/customer")
 
 public class CustomerRestController {
    private CustomerServiceImpl customerService;
@@ -24,28 +25,28 @@ public class CustomerRestController {
 
 
 
-    @GetMapping("/customers")
+    @GetMapping("/All")
     public List<CustomerDTO> getCustomers() {
         return customerService.listCustomers();
 
 
     }
 
-    @GetMapping("/customers/{id}")
+    @GetMapping("/{id}")
     public CustomerDTO getCustomer(@PathVariable(name = "id")  Long customerId) throws CustomorNotFoundException {
 
         return customerService.getCustomer(customerId);
     }
 
-    @PostMapping("/customer/save")
+    @PostMapping("/save")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) throws CustomorNotFoundException {
         return customerService.saveCustomer(customerDTO);
     }
-    @PutMapping("customer/update/{id}")
+    @PutMapping("/update/{id}")
     public CustomerDTO updateCustomer(@PathVariable (name = "id") Long customerId, @RequestBody CustomerDTO customerDTO) throws CustomorNotFoundException {
         return customerService.updateCustomer(customerId,customerDTO);
     }
-    @DeleteMapping("customer/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteCustomer(@PathVariable (name = "id") Long customerId) throws CustomorNotFoundException {
         customerService.deleteCustomer(customerId);
     }

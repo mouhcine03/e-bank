@@ -6,6 +6,7 @@ import com.mouhcine.ebankbackend.Exceptions.BalanceInsufisentException;
 import com.mouhcine.ebankbackend.Exceptions.CustomorNotFoundException;
 import com.mouhcine.ebankbackend.Exceptions.bankAccountNotFoundException;
 import com.mouhcine.ebankbackend.Exceptions.bankAccountSuspended;
+import com.mouhcine.ebankbackend.dtos.BankAccountDto;
 import com.mouhcine.ebankbackend.dtos.CustomerDTO;
 import com.mouhcine.ebankbackend.entities.*;
 import com.mouhcine.ebankbackend.repositories.AccountOperationRepository;
@@ -38,27 +39,28 @@ public class EBankBackendApplication {
 	CommandLineRunner commandLineRunner (BankAccountService bankAccountService, CustomerService customerService){
 		return args -> {
 			Stream.of("MOUHCINE","HOUDA","ARBI").forEach(name->{
-				CustomerDTO customer = new CustomerDTO();
-				customer.setName(name);
-				customer.setEmail(name+"@email.com");
-				customerService.saveCustomer(customer);
+				CustomerDTO customerDTO = new CustomerDTO();
+				customerDTO.setName(name);
+				customerDTO.setEmail(name+"@email.com");
+				CustomerDTO savedCustomer=customerService.saveCustomer(customerDTO);
+
 
 
 
                 try {
-                    bankAccountService.saveCurrentBankAccount(Math.random()*980000,customer.getId(),Math.random()*7000) ;
+                    bankAccountService.saveCurrentBankAccount(Math.random()*980000,savedCustomer.getId(),Math.random()*7000) ;
                 } catch (CustomorNotFoundException e) {
                     throw new RuntimeException(e);
                 }
 				try {
-					bankAccountService.saveSavingBankAccount(Math.random()*560000,customer.getId(),5.5) ;
+					bankAccountService.saveSavingBankAccount(Math.random()*560000,savedCustomer.getId(),5.5) ;
 				} catch (CustomorNotFoundException e) {
 					throw new RuntimeException(e);
 				}
 
 
             });
-			List <CustomerDTO> customers=customerService.listCustomers();
+
 
 
         };
@@ -71,7 +73,7 @@ public class EBankBackendApplication {
 			List <CustomerDTO> customers=customerService.listCustomers();
 			for(CustomerDTO c : customers){
 				bankAccountService.listBankAccountsOfCustomer(c.getId()).forEach(bankAccount->{
-					for (int i=0;i<3;i++){
+					for (int i=0;i<10;i++){
 						try {
 							bankAccountService.debit(bankAccount.getId(),Math.random()*8900,"debit number"+i);
 							bankAccountService.credit(bankAccount.getId(),Math.random()*8900,"credit number:"+i);
@@ -97,8 +99,8 @@ public class EBankBackendApplication {
 				System.out.println("custumor name:" + c.getName() + "   custumor email:" + c.getEmail());
 
 				System.out.println("------custumor comptes----");
-				List<BankAccount> custumorBankAccount=bankAccountService.listBankAccountsOfCustomer(c.getId());
-				for (BankAccount b : custumorBankAccount) {
+				List<BankAccountDto> custumorBankAccount=bankAccountService.listBankAccountsOfCustomer(c.getId());
+				for (BankAccountDto b : custumorBankAccount) {
 					System.out.println("Created at: "+b.getCreateAt()+" Balance: "+b.getBalance()+"account status"+b.getStatus());
 
 

@@ -3,7 +3,7 @@ package com.mouhcine.ebankbackend.services;
 import com.mouhcine.ebankbackend.Exceptions.CustomorNotFoundException;
 import com.mouhcine.ebankbackend.dtos.CustomerDTO;
 import com.mouhcine.ebankbackend.entities.Customer;
-import com.mouhcine.ebankbackend.mappers.BankAccountMapperImp;
+import com.mouhcine.ebankbackend.mappers.CustomerMapper;
 import com.mouhcine.ebankbackend.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
-    private BankAccountMapperImp dtoMapper;
+    private CustomerMapper dtoMapper;
 
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-        this.dtoMapper = new BankAccountMapperImp();
+        this.dtoMapper = new CustomerMapper();
     }
     @Override
     public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
