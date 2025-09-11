@@ -44,7 +44,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(Long customerid) throws CustomorNotFoundException {
+    public List<CustomerDTO> searchCustomer(String keyword)  {
+        return customerRepository.findByNameContains(keyword).stream().map(customer ->
+                    dtoMapper.fromCustomerToCustomerDTO(customer)).toList();
+
+    }
+
+    @Override
+    public void deleteCustomer(Long customerid)  {
         customerRepository.deleteById(customerid);
     }
 
@@ -59,13 +66,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 
 
-//        customerList = customerRepository.findAll();
-//        List<CustomerDTO> customerDTOList = new ArrayList<>();
-//        for (Customer customer : customerList) {
-//            CustomerDTO customerDTO=new CustomerDTO();
-//            customerDTO=dtoMapper.fromCustomerToCustomerDTO(customer);
-//
-//        }
 
         return customerDTOList;
     }

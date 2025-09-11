@@ -1,0 +1,55 @@
+<div  class="container mt-2">
+
+  <ng-container *ngIf="customers | async as listCustomers; else failureOrLoading">
+    <div  class="card">
+      <div class="card-header">List of customers</div>
+      <div  class="card-body">
+        <div *ngIf="searchCustomerForm">
+        <form class="d-flex" [formGroup]="searchCustomerForm" (ngSubmit)="onSearchCustomer()">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" formControlName="keyword">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        </div>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Mame</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+          </tr>
+          </thead>
+          <tbody >
+          <tr *ngFor="let c of listCustomers" >
+
+            <td>{{c.id}}</td>
+            <td>{{c.name}}</td>
+            <td>{{c.email}}</td>
+            <td>
+              <button (click)="onDeleteCustomer(c.id)" class="btn btn-danger m-2"  >Delete</button>
+              <button (click)="onEditCustomer(c.id)" class="btn btn-secondary">Edit</button>
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+  </ng-container>
+  <div class="text-danger">
+    <ng-template  #failureOrLoading>
+      <ng-container *ngIf="errorMessage;else loading">
+        {{errorMessage}}
+
+      </ng-container>
+
+    </ng-template>
+    <ng-template #loading>
+      Loading....
+    </ng-template>
+  </div>
+
+
+</div>

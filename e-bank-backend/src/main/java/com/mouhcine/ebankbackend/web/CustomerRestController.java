@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin(origins = "*")
 
 public class CustomerRestController {
    private CustomerServiceImpl customerService;
@@ -30,6 +31,10 @@ public class CustomerRestController {
         return customerService.listCustomers();
 
 
+    }
+    @GetMapping("/search")
+    public List<CustomerDTO> searchCustomer(@RequestParam(name = "keyword") String keyword) throws CustomorNotFoundException {
+        return customerService.searchCustomer(keyword);
     }
 
     @GetMapping("/{id}")

@@ -13,6 +13,11 @@ public class BankAccountDto {
     private Date createAt;
     private AccountStatus status;
     private String type;
+    private CustomerDTO customerDTO;
+
+    public String getId() {
+        return id;
+    }
 
     public String getType() {
         return type;
@@ -20,12 +25,6 @@ public class BankAccountDto {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    private CustomerDTO customerDTO;
-
-    public String getId() {
-        return id;
     }
 
     public void setId(String id) {
